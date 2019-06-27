@@ -437,6 +437,7 @@
   "orderDetails-deliveryType-delivery": "خدمة توصيل",
   "orderDetails-partyTime": "موعد الحفلة",
   "orderDetails-code": "الكود",
+  "embty": "لا يوجد نتائج",
   "orderDetails-finishOrder": "إنهاء الطلب",
   "orderDetails-codeSent": "تم إرسال كود إنهاء الطلب للعميل قم بإدخاله",
   "orderDetails-enter-verifyCode": "ادخل كود التحقق",

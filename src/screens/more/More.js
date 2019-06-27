@@ -187,7 +187,7 @@ class More extends Component {
     if (!this.state.isArabic) {
       setLang('ar', true)(store.dispatch);
     } else {
-      setLang('ar', true)(store.dispatch);
+      setLang('en', false)(store.dispatch);
     }
 
     return (

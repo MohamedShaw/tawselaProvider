@@ -31,13 +31,14 @@ export const startApp = () => {
     config => {
       const { currentUser } = store.getState().auth;
       const { lang } = store.getState().lang;
+      console.log('current Uer *****', currentUser);
 
       return {
         ...config,
         headers: {
           'Accept-Language': lang,
           Authorization: currentUser
-            ? `Bearer ${currentUser.token}`
+            ? `Bearer ${currentUser.user.token || currentUser.token}`
             : config.headers.Authorization,
           ...config.headers,
         },
@@ -118,7 +119,7 @@ export const startApp = () => {
         animate: false,
       },
     });
-    // await setLang('ar', true)(store.dispatch);
+    await setLang('ar', true)(store.dispatch);
     // AsyncStorage.setItem('lang', '');
 
     await initLang('ar', true)(store.dispatch);

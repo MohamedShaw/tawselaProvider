@@ -43,7 +43,10 @@ export const signIn = (values, setSubmitting) => async (dispatch, getState) => {
       password: values.password,
     });
 
-    dispatch({ type: LOGIN_SUCCESS, payload: response.data });
+    const user = { ...response.data, user: response.data };
+    console.log('user ----', user);
+
+    dispatch({ type: LOGIN_SUCCESS, payload: user });
 
     console.log('response', response.data);
     AsyncStorage.setItem(
@@ -52,7 +55,6 @@ export const signIn = (values, setSubmitting) => async (dispatch, getState) => {
         ...response.data,
       }),
     );
-    console.log('%%%%%%%%%%%', response.data);
 
     // setHomeScreen();
     onSelectTab(0)(store.dispatch);
@@ -114,14 +116,18 @@ export function signUp(values, setSubmitting, countryCode) {
         },
       });
 
-      dispatch({ type: LOGIN_SUCCESS, payload: response.data });
+      const user = { ...response.data, user: response.data };
+
+      console.log('user ******', user);
+
+      dispatch({ type: LOGIN_SUCCESS, payload: user });
       AsyncStorage.setItem(
         '@CurrentUser',
         JSON.stringify({
           ...response.data,
         }),
       );
-      console.log('%%%%%%%%%%%', response.data);
+      console.log('%%%%%%%%%%% ******************', response.data);
       AppNavigation.setStackRoot({
         name: 'completeData',
       });
@@ -146,13 +152,14 @@ export const autoLogin = () => async (dispatch, getState) => {
 
   if (userData) {
     userData = JSON.parse(userData);
+    const user = { ...userData, user: userData };
 
     console.log('auto login');
-    console.log(userData);
+    console.log(user);
 
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: userData,
+      payload: user,
     });
     return { exist: true };
   }
@@ -258,6 +265,8 @@ export const clientCheck = (values, setSubmitting) => async (
   dispatch,
   getState,
 ) => {
+  console.log('******', store.getState().auth.currentUser);
+
   const { token } = store.getState().auth.currentUser;
   const data = new FormData();
 

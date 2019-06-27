@@ -15,7 +15,9 @@ export default class NoOrdersList extends Component {
           marginBottom={5}
           resizeMode="contain"
         />
-        <AppText reverse bold size={7} marginVertical={2} />
+        <AppText reverse bold size={7} marginVertical={2}>
+          {I18n.t('embty')}
+        </AppText>
         <AppText center marginHorizontal={15} lineHeight={12}>
           {/* {I18n.t('home-empty-content-description')} */}
         </AppText>

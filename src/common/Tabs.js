@@ -313,7 +313,7 @@ class Tabs extends Component {
           flex: 1,
           alignSelf: 'stretch',
         },
-        this.props.scrollable ? styles.rtl : null,
+        this.props.scrollable ? (this.props.rtl ? styles.rtl : null) : null,
         // this.props.scrollable
         //   ? {
         //       width: this.state.containerWidth,
