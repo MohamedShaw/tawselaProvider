@@ -32,7 +32,7 @@ class Home extends Component {
     if (!this.props.isConnected) {
       return (
         <AppView flex stretch backgroundColor="#ECEFEF">
-          <CustomHeader title={I18n.t('home')} showChat showNotification />
+          <CustomHeader title={I18n.t('home')} />
 
           <NoInternet />
           <CustomBottomTabs componentId={this.props.componentId} />
@@ -47,7 +47,7 @@ class Home extends Component {
           paddingBottom: barHeight,
         }}
       >
-        <CustomHeader title={I18n.t('homelokk')} />
+        <CustomHeader />
         <AppTabs customTabBar={<CustomTabBar />}>
           <Pending
             tabLabel={I18n.t('order-pending')}

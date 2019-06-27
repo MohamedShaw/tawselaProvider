@@ -313,7 +313,8 @@
   "setting-new-confirm-password": " تأكيد كلمه المرور الجديدة ",
 
   "change-password": "تغيير",
-
+  "delete": "رفض الطلب",
+  "delete-confirm": "هل انت متأكد من رفض هذا الطلب ؟",
   "setting-language": "اللغه",
   "setting-notification": "تلقي الاشعارات",
   "skip": "تخطي",

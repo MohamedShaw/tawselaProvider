@@ -46,6 +46,7 @@ class OrderItem extends Component {
       confirmModalVisible: false,
       errorModalVisible: false,
       errorModalMessage: '',
+      cancelOrder: false,
     };
     console.log('****', props.data);
   }
@@ -113,6 +114,62 @@ class OrderItem extends Component {
     }
   };
 
+  cancelOrder = async () => {
+    if (this.state.cancelLoading) return;
+    const { currentUser, data } = this.props;
+    const orderId = data.id;
+
+    this.source = CancelToken.source();
+
+    try {
+      this.setState({
+        cancelLoading: true,
+        confirmModalVisible: false,
+      });
+
+      const res = await axios.put(
+        `${API_ENDPOINT_FOOD_SERVICE}orders/${orderId}`,
+        {
+          status: 'REJECTED_BY_PROVIDER',
+        },
+        {
+          cancelToken: this.source.token,
+        },
+      );
+
+      this.setState({
+        cancelLoading: false,
+        cancelOrder: false,
+        confirmModalVisible: false,
+      });
+
+      this.props.refreshList([
+        'pendingOrders',
+        'acceptedOrders',
+        'finishedOrders',
+      ]);
+    } catch (error) {
+      console.log('error', error);
+
+      if (!axios.isCancel(error[0])) {
+        let errorMessage = I18n.t('ui-error-happened');
+
+        if (error[2].status) {
+          errorMessage = error[2].status;
+        } else if (error[1].message) {
+          errorMessage = error[1].message;
+        }
+        setTimeout(() => {
+          this.setState({
+            cancelLoading: false,
+            errorModalMessage: errorMessage,
+            errorModalVisible: true,
+          });
+        }, 400);
+      }
+    }
+  };
+
   renderIcons = () => (
     <AppView stretch>
       <AppView
@@ -138,8 +195,18 @@ class OrderItem extends Component {
         padding={3}
         marginTop={2}
         borderRadius={4}
+        onPress={() => {
+          this.setState({
+            confirmModalVisible: true,
+            cancelOrder: true,
+          });
+        }}
       >
-        <AppIcon name="close" type="ant" size={8} color="#fff" />
+        {this.state.cancelLoading ? (
+          <AppSpinner size={5} />
+        ) : (
+          <AppIcon name="close" type="ant" size={8} color="#fff" />
+        )}
       </AppView>
     </AppView>
   );
@@ -150,9 +217,6 @@ class OrderItem extends Component {
       <AppView
         stretch
         marginHorizontal={5}
-        // onPress={() => {
-        //   orderStatusNavigationPush(data.status, data.id, data.kind);
-        // }}
         paddingVertical={8}
         paddingLeft={6}
         paddingRight={4}
@@ -210,16 +274,21 @@ class OrderItem extends Component {
             });
           }}
           {...this.state.confirmModalData}
-          title={I18n.t('orderDetails-confirm-pending-modal-title')}
-          desc={I18n.t('orderDetails-confirm-pending-modal-desc')}
-          note={
-            this.props.currentUser.kind === 'PARTY_COOKER'
-              ? I18n.t('orderDetails-confirm-accepted-partyCooker-node')
-              : null
+          title={
+            this.state.cancelOrder
+              ? I18n.t('delete')
+              : I18n.t('orderDetails-confirm-pending-modal-title')
+          }
+          desc={
+            this.state.cancelOrder
+              ? I18n.t('delete-confirm')
+              : I18n.t('orderDetails-confirm-pending-modal-desc')
           }
           yesLabel={I18n.t('orderDetails-confirm-pending-modal-yes')}
           noLabel={I18n.t('orderDetails-confirm-pending-modal-no')}
-          onConfirm={this.acceptPending}
+          onConfirm={
+            this.state.cancelOrder ? this.cancelOrder : this.acceptPending
+          }
         />
       </AppView>
     );
