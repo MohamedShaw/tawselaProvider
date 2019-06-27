@@ -154,7 +154,7 @@ class ContactUs extends Component {
         paddingVertical={2}
       >
         <AppIcon name="phone" type="font-awesome" />
-        <AppText>0121000000000</AppText>
+        <AppText>+201096087514</AppText>
         <AppView
           backgroundColor="primary"
           width={8}
@@ -179,7 +179,7 @@ class ContactUs extends Component {
         paddingVertical={2}
       >
         <AppIcon name="email" type="entypo" />
-        <AppText>Ahmed@Ahmed.com</AppText>
+        <AppText>FCI@FCI.com</AppText>
         <AppIcon
           name="mail-with-circle"
           type="entypo"
