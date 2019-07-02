@@ -32,9 +32,8 @@ class Finished extends Component {
           refreshControl={this.props.finishedOrdersList}
           noResultsComponent={<NoOrdersList />}
           apiRequest={{
-            url: `${API_ENDPOINT_FOOD_SERVICE}orders?providerId=${
-              currentUser.user._id
-            }&status=FINISHED`,
+            url: `${API_ENDPOINT_FOOD_SERVICE}orders?providerId=${currentUser
+              .user._id || currentUser.user.user._id}&status=FINISHED`,
             responseResolver: response => {
               this.setState({
                 totalCount: response.data.totalCount,

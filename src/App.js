@@ -31,7 +31,6 @@ export const startApp = () => {
     config => {
       const { currentUser } = store.getState().auth;
       const { lang } = store.getState().lang;
-      console.log('current Uer *****', currentUser);
 
       return {
         ...config,

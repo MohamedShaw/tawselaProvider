@@ -32,9 +32,9 @@ class InProgress extends Component {
           refreshControl={this.props.acceptedOrdersList}
           noResultsComponent={<NoOrdersList />}
           apiRequest={{
-            url: `${API_ENDPOINT_FOOD_SERVICE}orders?providerId=${
-              currentUser.user._id
-            }&status=ACCEPTED_BY_PROVIDER`,
+            url: `${API_ENDPOINT_FOOD_SERVICE}orders?providerId=${currentUser
+              .user._id ||
+              currentUser.user.user._id}&status=ACCEPTED_BY_PROVIDER`,
             responseResolver: response => {
               this.setState({
                 totalCount: response.data.totalCount,

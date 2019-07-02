@@ -48,7 +48,7 @@ class CompleteData extends Component {
     const value = { ...values };
     value.busy = this.state.isBusy;
 
-    this.props.clientCheck(value, setSubmitting);
+    this.props.clientCheck(value, setSubmitting, this.props.data);
   };
 
   renderSwitch = () => {

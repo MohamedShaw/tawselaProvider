@@ -150,6 +150,7 @@ class Pending extends Component {
 
   renderList = () => {
     const { currentUser, activePage, index } = this.props;
+    console.log('*********', currentUser);
 
     if (activePage !== index) return null;
 
@@ -169,9 +170,8 @@ class Pending extends Component {
           refreshControl={this.props.pendingOrdersList}
           noResultsComponent={<NoOrdersList />}
           apiRequest={{
-            url: `${API_ENDPOINT_FOOD_SERVICE}orders?providerId=${
-              currentUser.user._id
-            }&status=PENDING`,
+            url: `${API_ENDPOINT_FOOD_SERVICE}orders?providerId=${currentUser
+              .user._id || currentUser.user.user._id}&status=PENDING`,
             responseResolver: response => {
               this.setState({
                 totalCount: response.data.totalCount,

@@ -46,7 +46,7 @@ export const signIn = (values, setSubmitting) => async (dispatch, getState) => {
     const user = { ...response.data, user: response.data };
     console.log('user ----', user);
 
-    dispatch({ type: LOGIN_SUCCESS, payload: user });
+    dispatch({ type: LOGIN_SUCCESS, payload: response.data });
 
     console.log('response', response.data);
     AsyncStorage.setItem(
@@ -120,23 +120,21 @@ export function signUp(values, setSubmitting, countryCode) {
 
       console.log('user ******', user);
 
-      dispatch({ type: LOGIN_SUCCESS, payload: user });
-      AsyncStorage.setItem(
-        '@CurrentUser',
-        JSON.stringify({
-          ...response.data,
-        }),
-      );
-      console.log('%%%%%%%%%%% ******************', response.data);
       AppNavigation.setStackRoot({
         name: 'completeData',
+        passProps: {
+          data: user,
+        },
       });
 
       setSubmitting(false);
     } catch (error) {
       console.log('erorr======', JSON.parse(JSON.stringify(error)));
+      dispatch({
+        type: LOGIN_FAIL,
+        payload: error[0].response.data.error.message,
+      });
 
-      showError(error[1]);
       setSubmitting(false);
     }
   };
@@ -155,11 +153,11 @@ export const autoLogin = () => async (dispatch, getState) => {
     const user = { ...userData, user: userData };
 
     console.log('auto login');
-    console.log(user);
+    console.log(userData);
 
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: user,
+      payload: userData,
     });
     return { exist: true };
   }
@@ -261,13 +259,13 @@ export const checkServiceDataCompleted = data => async (dispatch, getState) => {
   }
 };
 
-export const clientCheck = (values, setSubmitting) => async (
+export const clientCheck = (values, setSubmitting, user) => async (
   dispatch,
   getState,
 ) => {
-  console.log('******', store.getState().auth.currentUser);
+  console.log('******', user);
 
-  const { token } = store.getState().auth.currentUser;
+  const { token } = user;
   const data = new FormData();
 
   data.append('transferFees', values.transferFees);
@@ -288,6 +286,14 @@ export const clientCheck = (values, setSubmitting) => async (
           Authorization: `bearer ${token}`,
         },
       },
+    );
+
+    dispatch({ type: LOGIN_SUCCESS, payload: user });
+    AsyncStorage.setItem(
+      '@CurrentUser',
+      JSON.stringify({
+        ...user,
+      }),
     );
     setHomeScreen();
     setSubmitting(false);

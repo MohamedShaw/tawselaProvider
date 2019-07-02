@@ -15,12 +15,17 @@ import {
   AppFormLocation,
   AppIcon,
 } from '../../common';
-import { AppHeader, AvatarPicker, NoInternet } from '../../components';
+import {
+  AppHeader,
+  AvatarPicker,
+  NoInternet,
+  AppErrorModal,
+} from '../../components';
 import LoadingOverlay from '../../components/loadingOverlay/LoadingOverlay';
 import { validationSchemaEGY } from './validation';
 import { API_ENDPOINT_GATEWAY } from '../../utils/Config';
 import { showError } from '../../common/utils/localNotifications';
-import { signUp } from '../../actions/AuthActions';
+import { signUp, resetLoginError } from '../../actions/AuthActions';
 import colors from '../../common/defaults/colors';
 
 class SignUp extends Component {
@@ -37,7 +42,16 @@ class SignUp extends Component {
   state = {
     dialCode: '',
     selectedCountryId: null,
+    showInvalidUserModal: false,
   };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.error) {
+      this.setState({
+        showInvalidUserModal: true,
+      });
+    }
+  }
 
   onSubmit = async (values, { setSubmitting }) => {
     // if (values.profileImg === '') {
@@ -209,6 +223,23 @@ class SignUp extends Component {
             />
           </AppView>
         </AppView>
+        <AppErrorModal
+          visible={this.state.showInvalidUserModal}
+          fromSignIn
+          changeState={v => {
+            this.props.onResetLoginError();
+            this.setState({
+              showInvalidUserModal: v,
+            });
+          }}
+          errorMessage={[this.props.error]}
+          onConfirm={() => {
+            this.props.onResetLoginError();
+            this.setState({
+              showInvalidUserModal: false,
+            });
+          }}
+        />
         {this.props.loadingOverlay ? <LoadingOverlay /> : null}
       </>
     );
@@ -219,10 +250,12 @@ const mapStateToProps = state => ({
   connected: state.network.isConnected,
   loadingOverlay: state.loadingOverlay.socialSignin,
   rtl: state.lang.rtl,
+  error: state.auth.error,
 });
 
 const mapDispatchToProps = dispatch => ({
   signUp: bindActionCreators(signUp, dispatch),
+  onResetLoginError: bindActionCreators(resetLoginError, dispatch),
 });
 
 export default connect(
